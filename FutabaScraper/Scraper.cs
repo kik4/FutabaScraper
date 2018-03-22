@@ -32,7 +32,7 @@ namespace FutabaScraper
 
         public async Task<List<Thread>> Threads()
         {
-            var address = "https://may.2chan.net/27/futaba.php?mode=cat";
+            var address = "https://may.2chan.net/27/futaba.php?mode=cat&sort=1";
             var config = Configuration.Default.WithDefaultLoader();
             var document = await BrowsingContext.New(config).OpenAsync(address);
             var table = document.QuerySelectorAll("table");
