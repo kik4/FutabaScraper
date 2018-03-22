@@ -12,6 +12,24 @@ namespace FutabaScraper
         {
         }
 
+        public async Task<List<Board>> Boards()
+        {
+            var address = "https://www.2chan.net/i.htm";
+            var config = Configuration.Default.WithDefaultLoader();
+            var document = await BrowsingContext.New(config).OpenAsync(address);
+            var atags = document.QuerySelectorAll("a.itn");
+
+            var result = new List<Board>();
+            foreach (var item in atags)
+            {
+                var splited = item.GetAttribute("href").Split('/', '?', '&');
+                var name = item.TextContent;
+                result.Add(new Board(name, splited[2], splited[4]));
+            }
+
+            return result;
+        }
+
         public async Task<List<Thread>> Threads()
         {
             var address = "https://may.2chan.net/27/futaba.php?mode=cat";
