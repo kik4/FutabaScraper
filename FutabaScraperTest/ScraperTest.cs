@@ -1,7 +1,5 @@
-using System;
-using Xunit;
 using FutabaScraper;
-
+using Xunit;
 
 namespace FutabaScraperTest
 {

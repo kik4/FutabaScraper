@@ -1,8 +1,7 @@
-﻿using System;
+﻿using AngleSharp;
 using System.Collections.Generic;
-using AngleSharp;
-using System.Threading.Tasks;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace FutabaScraper
 {
