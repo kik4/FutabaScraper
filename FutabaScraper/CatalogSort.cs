@@ -1,4 +1,4 @@
-﻿enum CatalogSort
+﻿public enum CatalogSort
 {
     カタログ = 0,
     新順 = 1,

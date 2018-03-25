@@ -30,13 +30,15 @@ namespace FutabaScraper
             return result;
         }
 
-        public async Task<List<Thread>> Threads(Board board)
+        public async Task<List<Thread>> Threads(Board board, CatalogSort sort = CatalogSort.カタログ)
         {
-            var address = board.CatalogUrl(CatalogSort.カタログ);
+            var address = board.CatalogUrl(sort);
+
             var config = Configuration.Default.WithDefaultLoader().WithCookies();
             var cookieProvider = config.Services.OfType<ICookieProvider>().First();
             cookieProvider.SetCookie("https://" + board.Host, "cxyl=200x1x4");
             var document = await BrowsingContext.New(config).OpenAsync(new Url(address));
+
             var table = document.QuerySelectorAll("table");
             var tds = table[1].QuerySelectorAll("a");
             var links = tds.Select(m => m.GetAttribute("href"));
