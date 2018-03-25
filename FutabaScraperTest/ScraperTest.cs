@@ -10,11 +10,10 @@ namespace FutabaScraperTest
         [Fact]
         public void BoardTest()
         {
-            var board = scraper.Board("https://may.2chan.net/27", "‚Ë‚±");
+            var board = new Board("https://may.2chan.net/27");
 
             Assert.Equal(board.Host, "may.2chan.net");
             Assert.Equal(board.FirstPath, "27");
-            Assert.Equal(board.Name, "‚Ë‚±");
         }
 
         [Fact]
@@ -28,7 +27,7 @@ namespace FutabaScraperTest
         [Fact]
         public async void ThreadsTest()
         {
-            var result = await scraper.Threads(scraper.Board("https://may.2chan.net/27", "‚Ë‚±"));
+            var result = await scraper.Threads(new Board("https://may.2chan.net/27"));
 
             Assert.True(result.Count > 50);
         }

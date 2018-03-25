@@ -4,7 +4,16 @@ namespace FutabaScraper
 {
     public class Board
     {
-        public Board(string name, string host, string firstPath)
+        public Board(string url)
+        {
+            var splited = url.Split('/');
+
+            this.Name = "";
+            this.Host = splited[2];
+            this.FirstPath = splited[3];
+        }
+
+        internal Board(string name, string host, string firstPath)
         {
             this.Name = name;
             this.Host = host;
