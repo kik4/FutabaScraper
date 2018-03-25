@@ -30,7 +30,7 @@ namespace FutabaScraperTest
         [Fact]
         public async void ThreadsTest()
         {
-            var result = await scraper.Threads();
+            var result = await scraper.Threads(scraper.Board("https://may.2chan.net/27", "‚Ë‚±"));
 
             Assert.True(result.Count > 0);
         }
