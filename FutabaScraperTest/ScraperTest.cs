@@ -30,7 +30,7 @@ namespace FutabaScraperTest
         {
             var result = await scraper.Threads(scraper.Board("https://may.2chan.net/27", "‚Ë‚±"));
 
-            Assert.True(result.Count > 0);
+            Assert.True(result.Count > 50);
         }
     }
 }

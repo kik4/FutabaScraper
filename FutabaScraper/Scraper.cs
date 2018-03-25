@@ -1,4 +1,5 @@
 ﻿using AngleSharp;
+using AngleSharp.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -38,8 +39,10 @@ namespace FutabaScraper
         public async Task<List<Thread>> Threads(Board board)
         {
             var address = board.CatalogUrl(CatalogSort.カタログ);
-            var config = Configuration.Default.WithDefaultLoader();
-            var document = await BrowsingContext.New(config).OpenAsync(address);
+            var config = Configuration.Default.WithDefaultLoader().WithCookies();
+            var cookieProvider = config.Services.OfType<ICookieProvider>().First();
+            cookieProvider.SetCookie("https://" + board.Host, "cxyl=200x1x4");
+            var document = await BrowsingContext.New(config).OpenAsync(new Url(address));
             var table = document.QuerySelectorAll("table");
             var tds = table[1].QuerySelectorAll("a");
             var links = tds.Select(m => m.GetAttribute("href"));
