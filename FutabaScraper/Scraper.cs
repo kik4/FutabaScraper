@@ -12,6 +12,12 @@ namespace FutabaScraper
         {
         }
 
+        public Board Board(string url, string name)
+        {
+            var splited = url.Split('/');
+            return new Board(name, splited[2], splited[3]);
+        }
+
         public async Task<List<Board>> Boards()
         {
             var address = "https://www.2chan.net/i.htm";

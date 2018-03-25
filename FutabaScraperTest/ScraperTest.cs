@@ -7,10 +7,21 @@ namespace FutabaScraperTest
 {
     public class ScraperTest
     {
+        private Scraper scraper = new Scraper();
+
         [Fact]
-        public async void BoardTest()
+        public void BoardTest()
         {
-            var scraper = new Scraper();
+            var board = scraper.Board("https://may.2chan.net/27", "‚Ë‚±");
+
+            Assert.Equal(board.Host, "may.2chan.net");
+            Assert.Equal(board.FirstPath, "27");
+            Assert.Equal(board.Name, "‚Ë‚±");
+        }
+
+        [Fact]
+        public async void BoardsTest()
+        {
             var result = await scraper.Boards();
 
             Assert.True(result.Count > 0);
@@ -19,7 +30,6 @@ namespace FutabaScraperTest
         [Fact]
         public async void ThreadsTest()
         {
-            var scraper = new Scraper();
             var result = await scraper.Threads();
 
             Assert.True(result.Count > 0);
