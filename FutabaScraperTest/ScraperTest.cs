@@ -31,5 +31,14 @@ namespace FutabaScraperTest
 
             Assert.True(result.Count > 50);
         }
+
+        [Fact]
+        public async void PostsTest()
+        {
+            var threads = await scraper.Threads(new Board("https://may.2chan.net/27"));
+            var result = await scraper.Posts(threads[0]);
+
+            Assert.True(result.Count > 0);
+        }
     }
 }

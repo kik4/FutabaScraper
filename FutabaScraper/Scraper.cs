@@ -3,6 +3,7 @@ using AngleSharp.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Text;
 
 namespace FutabaScraper
 {
@@ -10,6 +11,7 @@ namespace FutabaScraper
     {
         public Scraper()
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
         }
 
         public async Task<List<Board>> Boards()
@@ -50,8 +52,107 @@ namespace FutabaScraper
                 ulong id;
                 if (ulong.TryParse(str, out id))
                 {
-                    result.Add(new Thread(id));
+                    result.Add(new Thread(board, id));
                 }
+            }
+
+            return result;
+        }
+
+        public async Task<List<Post>> Posts(Thread thread)
+        {
+            var address = thread.ThreadUrl();
+
+            var config = Configuration.Default.WithDefaultLoader().WithCookies();
+            var document = await BrowsingContext.New(config).OpenAsync(new Url(address));
+
+            var result = new List<Post>();
+            {
+                var master = document.QuerySelector("div.thre");
+                var image = master.QuerySelector("a").TextContent;
+                var message = master.QuerySelector("blockquote").TextContent;
+                var checkbox = master.QuerySelector("input");
+                string title = null, name = null, ip = null, id = null;
+                ulong no = 0;
+                var next = checkbox.NextSibling;
+                if (next.NodeName == "FONT")
+                {
+                    title = checkbox.NextSibling.TextContent;
+                    next = next.NextSibling;
+                }
+                if (next.NodeValue.Contains("Name"))
+                {
+                    next = next.NextSibling;
+                    name = next.LastChild.TextContent;
+                    next = next.NextSibling;
+                }
+                var arr = next.TextContent.Trim('\n', ' ').Split(' ');
+                var date = arr[0];
+                for (var i = 1; i < arr.Length; i++)
+                {
+                    if (arr[i].Substring(0, 2) == "IP")
+                    {
+                        ip = arr[i].Substring(3);
+                    }
+                    else if (arr[i].Substring(0, 2) == "ID")
+                    {
+                        id = arr[i].Substring(3);
+                    }
+                    else if (arr[i].Substring(0, 2) == "No")
+                    {
+                        var str = arr[i].Substring(3);
+                        no = ulong.Parse(str);
+                    }
+                }
+                result.Add(new Post(no, date, message, image, title, name, id, ip));
+            }
+
+            var resList = document.QuerySelectorAll("table").Where(m => !string.IsNullOrEmpty(m.GetAttribute("border")));
+            foreach (var item in resList)
+            {
+                var message = item.QuerySelector("blockquote").TextContent;
+                string image = null;
+                var aimage = item.QuerySelectorAll("a").Where(m => string.IsNullOrEmpty(m.GetAttribute("class")));
+                if (aimage.Any())
+                {
+                    image = aimage.First().TextContent;
+                }
+                ////
+                var checkbox = item.QuerySelector("input");
+                string title = null, name = null, ip = null, id = null;
+                ulong no = 0;
+                var next = checkbox.NextSibling;
+                if (next.NodeName == "FONT")
+                {
+                    title = checkbox.NextSibling.TextContent;
+                    next = next.NextSibling;
+                }
+                if (next.NodeValue.Contains("Name"))
+                {
+                    next = next.NextSibling;
+                    name = next.LastChild.TextContent;
+                    next = next.NextSibling;
+                }
+                var arr = next.TextContent.Trim('\n', ' ').Split(' ');
+                var date = arr[0];
+                for (var i = 1; i < arr.Length; i++)
+                {
+                    if (arr[i].Substring(0, 2) == "IP")
+                    {
+                        ip = arr[i].Substring(3);
+                    }
+                    else if (arr[i].Substring(0, 2) == "ID")
+                    {
+                        id = arr[i].Substring(3);
+                    }
+                    else if (arr[i].Substring(0, 2) == "No")
+                    {
+                        var str = arr[i].Substring(3);
+                        no = ulong.Parse(str);
+                    }
+                }
+                ////
+                result.Add(new Post(no, date, message, image, title, name, id, ip));
             }
 
             return result;
