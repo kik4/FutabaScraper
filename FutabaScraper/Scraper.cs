@@ -47,8 +47,8 @@ namespace FutabaScraper
             foreach (var item in links)
             {
                 var str = item.Split('/', '.')[1];
-                int id;
-                if (int.TryParse(str, out id))
+                ulong id;
+                if (ulong.TryParse(str, out id))
                 {
                     result.Add(new Thread(id));
                 }

@@ -2,11 +2,11 @@
 {
     public class Thread
     {
-        public Thread(int ID)
+        public Thread(ulong ID)
         {
             this.ID = ID;
         }
 
-        public int ID { get; private set; }
+        public ulong ID { get; private set; }
     }
 }
