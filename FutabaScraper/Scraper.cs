@@ -9,16 +9,25 @@ namespace FutabaScraper
 {
     public class Scraper
     {
-        public Scraper()
+        IHttpClient client;
+
+        public Scraper(IHttpClient client = null)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+            if (client == null)
+            {
+                this.client = new HttpClient();
+            }
+            else
+            {
+                this.client = client;
+            }
         }
 
         public async Task<List<Board>> Boards()
         {
-            var address = "https://www.2chan.net/i.htm";
-            var config = Configuration.Default.WithDefaultLoader();
-            var document = await BrowsingContext.New(config).OpenAsync(address);
+            var document = await client.GetBoardsHtml();
             var atags = document.QuerySelectorAll("a.itn");
 
             var result = new List<Board>();
