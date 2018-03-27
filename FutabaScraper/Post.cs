@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace FutabaScraper
+﻿namespace FutabaScraper
 {
     public class Post
     {
