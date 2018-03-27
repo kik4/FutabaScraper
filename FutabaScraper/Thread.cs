@@ -4,13 +4,13 @@ namespace FutabaScraper
 {
     public class Thread
     {
-        internal Thread(Board Board, ulong ID)
+        internal Thread(Board board, ulong no)
         {
-            this.Board = Board;
-            this.ID = ID;
+            this.Board = board;
+            this.No = no;
         }
 
-        public ulong ID { get; private set; }
+        public ulong No { get; private set; }
         public Board Board { get; private set; }
 
         internal string ThreadUrl()
@@ -21,7 +21,7 @@ namespace FutabaScraper
                 .Append("/")
                 .Append(this.Board.FirstPath)
                 .Append("/res/")
-                .Append(this.ID)
+                .Append(this.No)
                 .Append(".htm");
             return sb.ToString();
         }

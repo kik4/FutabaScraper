@@ -4,16 +4,16 @@ namespace FutabaScraper
 {
     public class Post
     {
-        public Post(ulong No, string Date, string Message, string ImageFileName = null, string Title = null, string Name = null, string ID = null, string IP = null)
+        public Post(ulong no, string date, string message, string imageFileName = null, string title = null, string name = null, string id = null, string ip = null)
         {
-            this.No = No;
-            this.Date = Date;
-            this.Message = Message;
-            this.ImageFileName = ImageFileName;
-            this.Title = Title;
-            this.Name = Name;
-            this.ID = ID;
-            this.IP = IP;
+            this.No = no;
+            this.Date = date;
+            this.Message = message;
+            this.ImageFileName = imageFileName;
+            this.Title = title;
+            this.Name = name;
+            this.ID = id;
+            this.IP = ip;
         }
 
         public ulong No { get; private set; }

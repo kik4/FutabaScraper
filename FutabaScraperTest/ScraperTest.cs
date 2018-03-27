@@ -8,15 +8,6 @@ namespace FutabaScraperTest
         private Scraper scraper = new Scraper();
 
         [Fact]
-        public void BoardTest()
-        {
-            var board = new Board("https://may.2chan.net/27");
-
-            Assert.Equal(board.Host, "may.2chan.net");
-            Assert.Equal(board.FirstPath, "27");
-        }
-
-        [Fact]
         public async void BoardsTest()
         {
             var result = await scraper.Boards();
