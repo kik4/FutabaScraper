@@ -6,5 +6,6 @@ namespace FutabaScraper
     public interface IHttpClient
     {
         Task<IDocument> GetBoardsHtml();
+        Task<IDocument> GetThreadsHtml(Board board, CatalogSort sort);
     }
 }
