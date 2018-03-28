@@ -64,10 +64,7 @@ namespace FutabaScraper
 
         public async Task<List<Post>> Posts(Thread thread)
         {
-            var address = thread.ThreadUrl();
-
-            var config = Configuration.Default.WithDefaultLoader().WithCookies();
-            var document = await BrowsingContext.New(config).OpenAsync(new Url(address));
+            var document = await client.GetPostsHtml(thread);
 
             var result = new List<Post>();
             {

@@ -7,5 +7,6 @@ namespace FutabaScraper
     {
         Task<IDocument> GetBoardsHtml();
         Task<IDocument> GetThreadsHtml(Board board, CatalogSort sort);
+        Task<IDocument> GetPostsHtml(Thread thread);
     }
 }

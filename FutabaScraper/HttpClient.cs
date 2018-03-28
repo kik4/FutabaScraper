@@ -23,5 +23,12 @@ namespace FutabaScraper
             cookieProvider.SetCookie("https://" + board.Host, "cxyl=200x1x4");
             return await BrowsingContext.New(config).OpenAsync(new Url(address));
         }
+
+        public async Task<IDocument> GetPostsHtml(Thread thread)
+        {
+            var address = thread.ThreadUrl();
+            var config = Configuration.Default.WithDefaultLoader().WithCookies();
+            return await BrowsingContext.New(config).OpenAsync(new Url(address));
+        }
     }
 }
