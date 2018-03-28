@@ -1,7 +1,7 @@
 ﻿using AngleSharp;
+using AngleSharp.Dom;
 using AngleSharp.Services;
 using System.Linq;
-using AngleSharp.Dom;
 using System.Threading.Tasks;
 
 namespace FutabaScraper
