@@ -45,17 +45,25 @@ namespace FutabaScraper
             var document = await client.GetThreadsHtml(board, sort);
 
             var table = document.QuerySelectorAll("table");
-            var tds = table[1].QuerySelectorAll("a");
-            var links = tds.Select(m => m.GetAttribute("href"));
+            var tds = table[1].QuerySelectorAll("td");
 
             var result = new List<Thread>();
-            foreach (var item in links)
+            foreach (var item in tds)
             {
-                var str = item.Split('/', '.')[1];
-                ulong id;
-                if (ulong.TryParse(str, out id))
+                var a = item.QuerySelector("a").GetAttribute("href");
+                var str = a.Split('/', '.')[1];
+                ulong id = ulong.Parse(str);
+                var img = item.QuerySelector("img");
+                if (img != null)
                 {
-                    result.Add(new Thread(board, id));
+                    var src = img.GetAttribute("src");
+                    var splitted = src.Split('/', '.', 's');
+                    ulong imgNo = ulong.Parse(splitted[3]);
+                    result.Add(new Thread(board, id, imgNo, splitted[5]));
+                }
+                else
+                {
+                    result.Add(new Thread(board, id, 0, ""));
                 }
             }
 
