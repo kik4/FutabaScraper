@@ -8,8 +8,6 @@ namespace FutabaScraperTest
         [Fact]
         public async void BoardsTest()
         {
-
-            // test result
             var result = await new Scraper().Boards();
             Assert.True(result.Count > 0);
         }
