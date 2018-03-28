@@ -8,27 +8,35 @@ namespace FutabaScraper
 {
     public class HttpClient : IHttpClient
     {
+        IBrowsingContext context;
+
+        public HttpClient()
+        {
+            var config = Configuration.Default.WithDefaultLoader().WithCookies();
+            this.context = BrowsingContext.New(config);
+        }
+
         public async Task<IDocument> GetBoardsHtml()
         {
             var address = "https://www.2chan.net/i.htm";
-            var config = Configuration.Default.WithDefaultLoader();
-            return await BrowsingContext.New(config).OpenAsync(address);
+            return await this.context.OpenAsync(address);
         }
 
         public async Task<IDocument> GetThreadsHtml(Board board, CatalogSort sort)
         {
-            var address = board.CatalogUrl(sort);
-            var config = Configuration.Default.WithDefaultLoader().WithCookies();
+            // set cookie
+            var config = this.context.Configuration;
             var cookieProvider = config.Services.OfType<ICookieProvider>().First();
             cookieProvider.SetCookie("https://" + board.Host, "cxyl=200x1x4");
-            return await BrowsingContext.New(config).OpenAsync(new Url(address));
+
+			var address = board.CatalogUrl(sort);
+            return await this.context.OpenAsync(new Url(address));
         }
 
         public async Task<IDocument> GetPostsHtml(Thread thread)
         {
             var address = thread.ThreadUrl();
-            var config = Configuration.Default.WithDefaultLoader().WithCookies();
-            return await BrowsingContext.New(config).OpenAsync(new Url(address));
+            return await this.context.OpenAsync(new Url(address));
         }
     }
 }

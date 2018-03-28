@@ -7,33 +7,18 @@ namespace FutabaScraperTest
 {
     public class ScraperTest
     {
-        [Fact]
-        public async void BoardsTest()
+        IHttpClient mockClient;
+
+        public ScraperTest()
         {
             // set up mock
-            var doc = new HtmlParser().Parse(@"<!doctype html><html><head>< body >
+            var boardsHtml = new HtmlParser().Parse(@"<!doctype html><html><head>< body >
 <a href = ""//img.2chan.net/v.php?a&guid=on"" data-role=""button"" class=""itn"" data-ajax=""false"">A</a><br>
 <a href = ""//dec.2chan.net/v.php?b&guid=on"" data-role=""button"" class=""itn"" data-ajax=""false"">B</a><br>
 <a href = ""//jun.2chan.net/v.php?c&guid=on"" data-role=""button"" class=""itn"" data-ajax=""false"">C</a><br>
 <a href = ""//may.2chan.net/v.php?d&guid=on"" data-role=""button"" class=""itn"" data-ajax=""false"">D</a><br>
 <a href = ""//dat.2chan.net/v.php?e&guid=on"" data-role=""button"" class=""itn"" data-ajax=""false"">E</a><br></body></html>");
-            var mock = new Mock<IHttpClient>();
-            mock.Setup(x => x.GetBoardsHtml()).ReturnsAsync(doc);
-
-            // test result
-            var result = await new Scraper(mock.Object).Boards();
-            Assert.Equal(result.Count, 5);
-            Assert.Equal(result[0].Name, "A");
-            Assert.Equal(result[0].Host, "img.2chan.net");
-            Assert.Equal(result[0].FirstPath, "a");
-            Assert.Equal(result[4].Host, "dat.2chan.net");
-        }
-
-        [Fact]
-        public async void ThreadsTest()
-        {
-            // setup mock
-            var doc = new HtmlParser().Parse(@"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.01 Transitional//EN"" ""http://www.w3.org/TR/html4/loose.dtd""><html><head></head>
+            var threadsHtml = new HtmlParser().Parse(@"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.01 Transitional//EN"" ""http://www.w3.org/TR/html4/loose.dtd""><html><head></head>
 <body>
 <table width='100%'><tr><th bgcolor='#0040e0'>
 <font color='#FFFFFF'>カタログモード</font>
@@ -46,38 +31,7 @@ namespace FutabaScraperTest
 </tr>
 </table>
 </body></html>");
-            var mock = new Mock<IHttpClient>();
-            mock.Setup(x => x.GetThreadsHtml(It.IsAny<Board>(), It.IsAny<CatalogSort>())).ReturnsAsync(doc);
-
-            // test result
-            var scraper = new Scraper(mock.Object);
-            var board = new Board("https://may.2chan.net/27");
-            var result = await scraper.Threads(board);
-            Assert.Equal(result.Count, 3);
-            Assert.Equal(result[0].Board, board);
-            Assert.Equal<ulong>(result[0].No, 283234);
-            Assert.Equal<ulong>(result[1].No, 283253);
-            Assert.Equal<ulong>(result[2].No, 283260);
-        }
-
-        [Fact]
-        public async void PostsTest()
-        {
-            // setup mock
-            var doc1 = new HtmlParser().Parse(@"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.01 Transitional//EN"" ""http://www.w3.org/TR/html4/loose.dtd""><html><head></head>
-<body>
-<table width='100%'><tr><th bgcolor='#0040e0'>
-<font color='#FFFFFF'>カタログモード</font>
-</th></tr></table>
-<table border=1 align=center>
-<tr>
-<td><a href='res/283234.htm' target='_blank'><img src='/27/cat/1518058221204s.jpg' border=0 width=38 height=50 alt=""""></a><br><font size=2>3</font></td>
-<td><a href='res/283253.htm' target='_blank'><small>画像なく</small></a><br><font size=2>12</font></td>
-<td><a href='res/283260.htm' target='_blank'><img src='/27/cat/1518094159099s.jpg' border=0 width=30 height=50 alt=""""></a><br><font size=2>14</font></td>
-</tr>
-</table>
-</body></html>");
-            var doc2 = new HtmlParser().Parse(@"!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.01 Transitional//EN"" ""http://www.w3.org/TR/html4/loose.dtd""><html><head></head><body><div class=""thre"">画像ファイル名：<a href=""/27/src/1522040029588.jpg"" target=""_blank"">1522040029588.jpg</a>-(379459 B)<small>サムネ表示</small><br><a href=""/27/src/1522040029588.jpg"" target=""_blank""><img src=""/27/thumb/1522040029588s.jpg"" border=0 align=left width=251 height=167 hspace=20 alt=""379459 B""></a><input type=checkbox name=""284944"" value=delete id=delcheck284944><font color='#cc1105'><b>ちろ</b></font> 
+            var postsHtml = new HtmlParser().Parse(@"!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.01 Transitional//EN"" ""http://www.w3.org/TR/html4/loose.dtd""><html><head></head><body><div class=""thre"">画像ファイル名：<a href=""/27/src/1522040029588.jpg"" target=""_blank"">1522040029588.jpg</a>-(379459 B)<small>サムネ表示</small><br><a href=""/27/src/1522040029588.jpg"" target=""_blank""><img src=""/27/thumb/1522040029588s.jpg"" border=0 align=left width=251 height=167 hspace=20 alt=""379459 B""></a><input type=checkbox name=""284944"" value=delete id=delcheck284944><font color='#cc1105'><b>ちろ</b></font> 
 Name <font color='#117743'><b>名有り </b></font> 18/03/26(月)13:53:49 IP:220.27.*(bbtec.net) No.284944 <a class=del href=""javascript:void(0);"" onclick=""del(284944);return(false);"">del</a>
 <small>5月23日頃消えます</small>
 <blockquote>ハイキーねこ</blockquote><table border=0><tr><td class=rts>…</td><td class=rtd>
@@ -114,11 +68,41 @@ Name <font color='#117743'><b>名無し </b></font> 18/03/27(火)20:10:28 IP:153
 </html>
 ");
             var mock = new Mock<IHttpClient>();
-            mock.Setup(x => x.GetThreadsHtml(It.IsAny<Board>(), It.IsAny<CatalogSort>())).ReturnsAsync(doc1);
-            mock.Setup(x => x.GetPostsHtml(It.IsAny<Thread>())).ReturnsAsync(doc2);
+            mock.Setup(x => x.GetBoardsHtml()).ReturnsAsync(boardsHtml);
+            mock.Setup(x => x.GetThreadsHtml(It.IsAny<Board>(), It.IsAny<CatalogSort>())).ReturnsAsync(threadsHtml);
+            mock.Setup(x => x.GetPostsHtml(It.IsAny<Thread>())).ReturnsAsync(postsHtml);
 
-            // test result
-            var scraper = new Scraper(mock.Object);
+            this.mockClient = mock.Object;
+        }
+
+        [Fact]
+        public async void BoardsTest()
+        {
+            var result = await new Scraper(this.mockClient).Boards();
+            Assert.Equal(result.Count, 5);
+            Assert.Equal(result[0].Name, "A");
+            Assert.Equal(result[0].Host, "img.2chan.net");
+            Assert.Equal(result[0].FirstPath, "a");
+            Assert.Equal(result[4].Host, "dat.2chan.net");
+        }
+
+        [Fact]
+        public async void ThreadsTest()
+        {
+            var scraper = new Scraper(this.mockClient);
+            var board = new Board("https://may.2chan.net/27");
+            var result = await scraper.Threads(board);
+            Assert.Equal(result.Count, 3);
+            Assert.Equal(result[0].Board, board);
+            Assert.Equal<ulong>(result[0].No, 283234);
+            Assert.Equal<ulong>(result[1].No, 283253);
+            Assert.Equal<ulong>(result[2].No, 283260);
+        }
+
+        [Fact]
+        public async void PostsTest()
+        {
+            var scraper = new Scraper(this.mockClient);
             var threads = await scraper.Threads(new Board("https://may.2chan.net/27"));
             var result = await scraper.Posts(threads[0]);
             Assert.Equal(result.Count, 8);
