@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AngleSharp.Dom;
 
 namespace FutabaScraper
 {
@@ -78,39 +79,7 @@ namespace FutabaScraper
                 var master = document.QuerySelector("div.thre");
                 var image = master.QuerySelector("a").TextContent;
                 var message = master.QuerySelector("blockquote").TextContent;
-                var checkbox = master.QuerySelector("input");
-                string title = null, name = null, ip = null, id = null;
-                ulong no = 0;
-                var next = checkbox.NextSibling;
-                if (next.NodeName == "FONT")
-                {
-                    title = checkbox.NextSibling.TextContent;
-                    next = next.NextSibling;
-                }
-                if (next.NodeValue.Contains("Name"))
-                {
-                    next = next.NextSibling;
-                    name = next.LastChild.TextContent;
-                    next = next.NextSibling;
-                }
-                var arr = next.TextContent.Trim('\n', ' ').Split(' ');
-                var date = arr[0];
-                for (var i = 1; i < arr.Length; i++)
-                {
-                    if (arr[i].Substring(0, 2) == "IP")
-                    {
-                        ip = arr[i].Substring(3);
-                    }
-                    else if (arr[i].Substring(0, 2) == "ID")
-                    {
-                        id = arr[i].Substring(3);
-                    }
-                    else if (arr[i].Substring(0, 2) == "No")
-                    {
-                        var str = arr[i].Substring(3);
-                        no = ulong.Parse(str);
-                    }
-                }
+                (ulong no, string date, string title, string name, string ip, string id) = this.Post(master);
                 result.Add(new Post(no, date, message, image, title, name, id, ip));
             }
 
@@ -124,45 +93,50 @@ namespace FutabaScraper
                 {
                     image = aimage.First().TextContent;
                 }
-                ////
-                var checkbox = item.QuerySelector("input");
-                string title = null, name = null, ip = null, id = null;
-                ulong no = 0;
-                var next = checkbox.NextSibling;
-                if (next.NodeName == "FONT")
-                {
-                    title = checkbox.NextSibling.TextContent;
-                    next = next.NextSibling;
-                }
-                if (next.NodeValue.Contains("Name"))
-                {
-                    next = next.NextSibling;
-                    name = next.LastChild.TextContent;
-                    next = next.NextSibling;
-                }
-                var arr = next.TextContent.Trim('\n', ' ').Split(' ');
-                var date = arr[0];
-                for (var i = 1; i < arr.Length; i++)
-                {
-                    if (arr[i].Substring(0, 2) == "IP")
-                    {
-                        ip = arr[i].Substring(3);
-                    }
-                    else if (arr[i].Substring(0, 2) == "ID")
-                    {
-                        id = arr[i].Substring(3);
-                    }
-                    else if (arr[i].Substring(0, 2) == "No")
-                    {
-                        var str = arr[i].Substring(3);
-                        no = ulong.Parse(str);
-                    }
-                }
-                ////
+                (ulong no, string date, string title, string name, string ip, string id) = this.Post(item);
                 result.Add(new Post(no, date, message, image, title, name, id, ip));
             }
 
             return result;
+        }
+
+        private (ulong no, string date, string title, string name, string ip, string id) Post(IElement target)
+        {
+            var checkbox = target.QuerySelector("input");
+            string title = null, name = null, ip = null, id = null;
+            ulong no = 0;
+            var next = checkbox.NextSibling;
+            if (next.NodeName == "FONT")
+            {
+                title = checkbox.NextSibling.TextContent;
+                next = next.NextSibling;
+            }
+            if (next.NodeValue.Contains("Name"))
+            {
+                next = next.NextSibling;
+                name = next.LastChild.TextContent;
+                next = next.NextSibling;
+            }
+            var arr = next.TextContent.Trim('\n', ' ').Split(' ');
+            var date = arr[0];
+            for (var i = 1; i < arr.Length; i++)
+            {
+                if (arr[i].Substring(0, 2) == "IP")
+                {
+                    ip = arr[i].Substring(3);
+                }
+                else if (arr[i].Substring(0, 2) == "ID")
+                {
+                    id = arr[i].Substring(3);
+                }
+                else if (arr[i].Substring(0, 2) == "No")
+                {
+                    var str = arr[i].Substring(3);
+                    no = ulong.Parse(str);
+                }
+            }
+
+            return (no, date, title, name, ip, id);
         }
     }
 }
