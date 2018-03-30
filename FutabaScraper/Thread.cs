@@ -18,10 +18,7 @@ namespace FutabaScraper
         internal string ThreadUrl()
         {
             var sb = new StringBuilder();
-            sb.Append("https://")
-                .Append(this.Board.Host)
-                .Append("/")
-                .Append(this.Board.FirstPath)
+            sb.Append(this.Board.CommonUrl())
                 .Append("/res/")
                 .Append(this.No)
                 .Append(".htm");
@@ -35,10 +32,7 @@ namespace FutabaScraper
             }
 
             var sb = new StringBuilder();
-            sb.Append("https://")
-                .Append(this.Board.Host)
-                .Append("/")
-                .Append(this.Board.FirstPath)
+            sb.Append(this.Board.CommonUrl())
                 .Append("/cat/")
                 .Append(this.Image.No)
                 .Append("s.")

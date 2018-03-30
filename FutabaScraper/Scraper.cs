@@ -59,7 +59,7 @@ namespace FutabaScraper
                     var src = img.GetAttribute("src");
                     var splitted = src.Split('/', '.', 's');
                     ulong imgNo = ulong.Parse(splitted[3]);
-                    result.Add(new Thread(board, id, new Image(imgNo, splitted[5])));
+                    result.Add(new Thread(board, id, new Image(board, imgNo, splitted[5])));
                 }
                 else
                 {
@@ -77,7 +77,7 @@ namespace FutabaScraper
             var result = new List<Post>();
             {
                 var master = document.QuerySelector("div.thre");
-                var image = master.QuerySelector("a").TextContent;
+                var image = new Image(thread.Board, master.QuerySelector("a").TextContent);
                 var message = master.QuerySelector("blockquote").TextContent;
                 (ulong no, string date, string title, string name, string ip, string id) = this.Post(master);
                 result.Add(new Post(no, date, message, image, title, name, id, ip));
@@ -87,11 +87,11 @@ namespace FutabaScraper
             foreach (var item in resList)
             {
                 var message = item.QuerySelector("blockquote").TextContent;
-                string image = null;
+                Image image = null;
                 var aimage = item.QuerySelectorAll("a").Where(m => string.IsNullOrEmpty(m.GetAttribute("class")));
                 if (aimage.Any())
                 {
-                    image = aimage.First().TextContent;
+                    image = new Image(thread.Board, aimage.First().TextContent);
                 }
                 (ulong no, string date, string title, string name, string ip, string id) = this.Post(item);
                 result.Add(new Post(no, date, message, image, title, name, id, ip));

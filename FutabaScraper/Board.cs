@@ -26,14 +26,12 @@ namespace FutabaScraper
 
         internal string CatalogUrl(CatalogSort sort)
         {
-            var sb = new StringBuilder();
-            sb.Append("http://")
-                .Append(this.Host)
-                .Append("/")
-                .Append(this.FirstPath)
-                .Append("/futaba.php?mode=cat&sort=")
-                .Append((int)sort);
-            return sb.ToString();
+            return this.CommonUrl() + "/futaba.php?mode=cat&sort=" + (int)sort;
+        }
+
+        internal string CommonUrl()
+        {
+            return "https://" + this.Host + "/" + this.FirstPath;
         }
     }
 }

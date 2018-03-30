@@ -108,6 +108,8 @@ Name <font color='#117743'><b>名無し </b></font> 18/03/27(火)20:10:28 IP:153
             var threads = await scraper.Threads(new Board("https://may.2chan.net/27"));
             var result = await scraper.Posts(threads[0]);
             Assert.Equal(result.Count, 8);
+            Assert.Equal(result[0].Image.ThumbnailUrl(), "https://may.2chan.net/27/thumb/1522040029588s.jpg");
+            Assert.Equal(result[1].Image.Url(), "https://may.2chan.net/27/src/1522040092289.jpg");
         }
     }
 }
