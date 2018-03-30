@@ -58,11 +58,11 @@ namespace FutabaScraper
                     var src = img.GetAttribute("src");
                     var splitted = src.Split('/', '.', 's');
                     ulong imgNo = ulong.Parse(splitted[3]);
-                    result.Add(new Thread(board, id, imgNo, splitted[5]));
+                    result.Add(new Thread(board, id, new Image(imgNo, splitted[5])));
                 }
                 else
                 {
-                    result.Add(new Thread(board, id, 0, ""));
+                    result.Add(new Thread(board, id, null));
                 }
             }
 

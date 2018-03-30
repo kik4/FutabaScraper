@@ -96,6 +96,7 @@ Name <font color='#117743'><b>名無し </b></font> 18/03/27(火)20:10:28 IP:153
             Assert.Equal(result[0].Board, board);
             Assert.Equal<ulong>(result[0].No, 283234);
             Assert.Equal(result[0].CatalogImageUrl(), "https://may.2chan.net/27/cat/1518058221204s.jpg");
+            Assert.Equal(result[1].CatalogImageUrl(), null);
             Assert.Equal<ulong>(result[1].No, 283253);
             Assert.Equal<ulong>(result[2].No, 283260);
         }

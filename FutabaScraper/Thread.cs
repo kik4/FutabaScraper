@@ -4,18 +4,16 @@ namespace FutabaScraper
 {
     public class Thread
     {
-        internal Thread(Board board, ulong no, ulong imageNo, string imageExtension)
+        internal Thread(Board board, ulong no, Image image)
         {
             this.Board = board;
             this.No = no;
-            this.imageNo = imageNo;
-            this.imageExtension = imageExtension;
+            this.Image = image;
         }
 
         public ulong No { get; private set; }
         public Board Board { get; private set; }
-        private ulong imageNo { get; set; }
-        private string imageExtension { get; set; }
+        private Image Image { get; set; }
 
         internal string ThreadUrl()
         {
@@ -32,15 +30,19 @@ namespace FutabaScraper
 
         public string CatalogImageUrl()
         {
+            if (this.Image == null) {
+                return null;
+            }
+
             var sb = new StringBuilder();
             sb.Append("https://")
                 .Append(this.Board.Host)
                 .Append("/")
                 .Append(this.Board.FirstPath)
                 .Append("/cat/")
-                .Append(this.imageNo)
+                .Append(this.Image.No)
                 .Append("s.")
-                .Append(this.imageExtension);
+                .Append(this.Image.Extension);
             return sb.ToString();
         }
     }
