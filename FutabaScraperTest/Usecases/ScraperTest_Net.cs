@@ -1,4 +1,5 @@
 using FutabaScraper;
+using FutabaScraper.Exceptions;
 using Xunit;
 
 namespace FutabaScraperTest
@@ -19,6 +20,11 @@ namespace FutabaScraperTest
             var board = new Board("https://may.2chan.net/27");
             var result = await scraper.Threads(board);
             Assert.True(result.Count > 50);
+
+            await Assert.ThrowsAsync<HttpNotFoundException>(async () =>
+            {
+                await scraper.Threads(new Board("https://may.2chan.net/270"));
+            });
         }
 
         [Fact]

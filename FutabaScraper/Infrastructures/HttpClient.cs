@@ -1,7 +1,9 @@
 ﻿using AngleSharp;
 using AngleSharp.Dom;
 using AngleSharp.Services;
+using FutabaScraper.Exceptions;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace FutabaScraper
@@ -18,8 +20,7 @@ namespace FutabaScraper
 
         public async Task<IDocument> GetBoardsHtml()
         {
-            var address = "https://www.2chan.net/i.htm";
-            return await this.context.OpenAsync(address);
+            return await this.GetDocument(new Url("https://www.2chan.net/i.htm"));
         }
 
         public async Task<IDocument> GetThreadsHtml(Board board, CatalogSort sort)
@@ -29,14 +30,26 @@ namespace FutabaScraper
             var cookieProvider = config.Services.OfType<ICookieProvider>().First();
             cookieProvider.SetCookie("https://" + board.Host, "cxyl=200x1x4");
 
-			var address = board.CatalogUrl(sort);
-            return await this.context.OpenAsync(new Url(address));
+            return await this.GetDocument(new Url(board.CatalogUrl(sort)));
         }
 
         public async Task<IDocument> GetPostsHtml(Thread thread)
         {
-            var address = thread.ThreadUrl();
-            return await this.context.OpenAsync(new Url(address));
+            return await this.GetDocument(new Url(thread.ThreadUrl()));
+        }
+
+        private async Task<IDocument> GetDocument(Url address)
+        {
+            var doc = await this.context.OpenAsync(address);
+            if (doc.StatusCode == HttpStatusCode.NotFound)
+            {
+                throw new HttpNotFoundException(doc?.GetElementsByTagName("h1").FirstOrDefault()?.FirstChild?.TextContent ?? "404 File Not Found");
+            }
+            else if((int)doc.StatusCode >= 400)
+            {
+                throw new HttpException(doc?.GetElementsByTagName("h1").FirstOrDefault()?.FirstChild?.TextContent ?? "Error");
+            }
+            return doc;
         }
     }
 }
