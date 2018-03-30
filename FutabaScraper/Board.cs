@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace FutabaScraper
+﻿namespace FutabaScraper
 {
     public class Board
     {

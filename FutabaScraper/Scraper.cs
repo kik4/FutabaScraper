@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using AngleSharp.Dom;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using AngleSharp.Dom;
 
 namespace FutabaScraper
 {
