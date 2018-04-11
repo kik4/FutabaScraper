@@ -1,4 +1,5 @@
 using AngleSharp.Parser.Html;
+using FutabaScraper;
 using FutabaScraper.Services;
 using FutabaScraper.Models;
 using Moq;

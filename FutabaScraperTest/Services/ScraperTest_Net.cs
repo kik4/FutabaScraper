@@ -1,6 +1,6 @@
 using FutabaScraper.Infrastructures;
 using FutabaScraper.Models;
-using FutabaScraper.Services;
+using FutabaScraper;
 using FutabaScraper.Exceptions;
 using Xunit;
 

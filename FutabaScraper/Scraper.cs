@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FutabaScraper.Models;
+using FutabaScraper.Services;
 
-namespace FutabaScraper.Services
+namespace FutabaScraper
 {
     public class Scraper
     {
