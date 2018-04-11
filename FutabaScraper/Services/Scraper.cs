@@ -3,25 +3,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FutabaScraper.Models;
 
-namespace FutabaScraper
+namespace FutabaScraper.Services
 {
     public class Scraper
     {
-        IHttpClient client;
+        HttpClient client;
 
-        public Scraper(IHttpClient client = null)
+        public Scraper(HttpClient client)
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            if (client == null)
-            {
-                this.client = new HttpClient();
-            }
-            else
-            {
-                this.client = client;
-            }
+            this.client = client;
         }
 
         public async Task<List<Board>> Boards()

@@ -2,17 +2,19 @@
 using AngleSharp.Dom;
 using AngleSharp.Services;
 using FutabaScraper.Exceptions;
+using FutabaScraper.Models;
+using FutabaScraper.Services;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace FutabaScraper
+namespace FutabaScraper.Infrastructures
 {
-    public class HttpClient : IHttpClient
+    public class HttpClientImpl : HttpClient
     {
         IBrowsingContext context;
 
-        public HttpClient()
+        public HttpClientImpl()
         {
             var config = Configuration.Default.WithDefaultLoader().WithCookies();
             this.context = BrowsingContext.New(config);

@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace FutabaScraper
+namespace FutabaScraper.Models
 {
     public class Thread
     {

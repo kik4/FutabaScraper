@@ -1,5 +1,6 @@
 using AngleSharp.Parser.Html;
-using FutabaScraper;
+using FutabaScraper.Services;
+using FutabaScraper.Models;
 using Moq;
 using Xunit;
 
@@ -7,7 +8,7 @@ namespace FutabaScraperTest
 {
     public class ScraperTest
     {
-        IHttpClient mockClient;
+        HttpClient mockClient;
 
         public ScraperTest()
         {
@@ -67,7 +68,7 @@ Name <font color='#117743'><b>名無し </b></font> 18/03/27(火)20:10:28 IP:153
 </body>
 </html>
 ");
-            var mock = new Mock<IHttpClient>();
+            var mock = new Mock<HttpClient>();
             mock.Setup(x => x.GetBoardsHtml()).ReturnsAsync(boardsHtml);
             mock.Setup(x => x.GetThreadsHtml(It.IsAny<Board>(), It.IsAny<CatalogSort>())).ReturnsAsync(threadsHtml);
             mock.Setup(x => x.GetPostsHtml(It.IsAny<Thread>())).ReturnsAsync(postsHtml);

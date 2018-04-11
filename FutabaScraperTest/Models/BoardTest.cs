@@ -1,4 +1,4 @@
-﻿using FutabaScraper;
+﻿using FutabaScraper.Models;
 using Xunit;
 
 namespace FutabaScraperTest

@@ -1,4 +1,4 @@
-﻿namespace FutabaScraper
+﻿namespace FutabaScraper.Models
 {
     public class Board
     {

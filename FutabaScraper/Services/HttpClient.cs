@@ -1,9 +1,10 @@
 ﻿using AngleSharp.Dom;
+using FutabaScraper.Models;
 using System.Threading.Tasks;
 
-namespace FutabaScraper
+namespace FutabaScraper.Services
 {
-    public interface IHttpClient
+    public interface HttpClient
     {
         Task<IDocument> GetBoardsHtml();
         Task<IDocument> GetThreadsHtml(Board board, CatalogSort sort);
